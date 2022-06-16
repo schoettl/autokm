@@ -151,6 +151,9 @@ Verdächtig viele Beteiligte:
 
 #+RESULTS:
 
+# TODO ein fahrer mehrmals angegeben?
+# das macht alles das alte plausibel.sh script...
+
 * COMMENT Using Radio Checkboxes to select the file
 
 #+NAME: kmfile

@@ -12,40 +12,41 @@ folgendermaßen:
 
 - [[https://organice.200ok.ch/][organice]] als digitales Fahrtenbuch (quasi als App für's Smartphone).
 - Die Fahrtenbuch-Datei hat ein spezielles [[https://orgmode.org/][Org Mode]] Datenformat.
-- Mithilfe von Emacs, Org Mode, Hledger und weiteren Scripts wird die
-  Abrechnung erstellt.
+- Mithilfe von Emacs, Org Mode, [[https://hledger.org/][hledger]]
+  und weiteren Scripts wird die Abrechnung erstellt.
 
 * Beispiel- und Vorlagedatei für das Fahrtenbuch
 
 Wichtig in diesem Beispiel ist eigentlich nur:
 
-- Kilometerstände müssen mindestens zwei Sterne davor stehen haben (=**=)
+- Vor jedem Kilometerstand müssen mindestens zwei Sterne stehen (=**=)
+- Die Kilometerstände sind absteigend sortiert, d.h. der neueste,
+  höchste Kilometerstand muss immer ganz oben stehen
 - Nach dem ganzzahligen Kilometerstand muss "km" stehen
-- Nach "km" kann der Anfangsbuchstabe des Namen des Fahrers stehen (oder bei mehreren
-  Personen mehrere Anfangsbuchstaben ohne Leerzeichen dazwischen)
+- Nach "km" kann ein Buchstabe als Fahrerkürzel stehen (oder bei mehreren
+  Personen mehrere eindeutige Buchstaben ohne Leerzeichen dazwischen)
 - Wenn Fahrer angegeben sind kann danach ein beliebiger Text stehen
 
-Formal:
+Formal definiert:
 
-: ** KILOMETERSTAND km [FAHRER [BESCHREIBUNG] [ORG_TAGS]]
+: ** KILOMETERSTAND km [FAHRER [BESCHREIBUNG]] [ORG_TAGS]
 
 TODO: Muss noch genauer beschrieben werden. Es funktioniert das, was
-das Skript =org2hledger.awk= akzeptiert.
+das Skript =org2hledger.awk= richtig verarbeitet.
 
 #+begin_src org :tangle sample.org
   * Fahrtenbuch
-  ** Aktuelle Fahrten
-  *** 1200 km J ausflug in die berge
+  ** 1200 km J ausflug in die berge
   [2022-06-16 Thu]
-  *** 1100 km H
+  ** 1100 km H
   [2022-06-15 Thu]
-  *** 1000 km
+  ** 1000 km
   [2022-06-15 Thu]
-  ** Archiv (2021)
-  *** 1000 km J urlaub
-  *** 700 km
-  *** 600 km H
-  *** 500 km
+  * Archiv (2021)
+  ** 1000 km J urlaub
+  ** 700 km
+  ** 600 km H
+  ** 500 km
 #+end_src
 
 * Beispiel Capture Templates für organice
@@ -56,14 +57,26 @@ in organice
 definieren, also Vorlagen, die man über den "+" Button öffnen,
 ausfüllen und dem Fahrtenbuch hinzufügen kann.
 
-# TODO: placeholder for cursor und inactive timestamp with time?
-# einen für Anfang, einen für Ende
+*Anfangsstand* (A) – nicht notwendig, wenn der Anfangsstand gleich dem
+letzten Endstand ist
+
+*Prepend: yes*
+
 #+begin_example
-  ** 20%? km J
+  * 25%? km
   %U
 #+end_example
 
-* Ein Hledger Journal für alle Autos erzeugen
+*Endstand* (E)
+
+*Prepend: yes*
+
+#+begin_example
+  * 25%? km J
+  %U
+#+end_example
+
+* Ein hledger Journal für alle Autos erzeugen
 
 #+begin_src sh
   echo > kmstand.ledger
@@ -75,7 +88,7 @@ ausfüllen und dem Fahrtenbuch hinzufügen kann.
   awk -f org2hledger.awk -vextratag=auto:benz < ~/Dropbox/org/gschwisterl/auto_opa.org >> kmstand.ledger
 #+end_src
 
-Beispiel Hledger Abfrage: Kilometer pro Jahr, getrennt nach Auto:
+Beispiel hledger-Abfrage: Kilometer pro Jahr, getrennt nach Auto:
 
 #+begin_src sh :results verbatim
   hledger -f kmstand.ledger balance expenses:km: --pivot auto -Y
