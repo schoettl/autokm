@@ -1,15 +1,24 @@
+#+TITLE:    Abrechnung
+#+SUBTITLE: Kilometerabrechnung von gemeinsam genutztem Auto
+#+OPTIONS:  toc:nil num:nil timestamp:nil prop:t
+#+AUTHOR:   Jakob Schöttl
+#+EMAIL:    jakob.schoettl@yahoo.de
 
-* Abrechnung
+#+begin_src elisp :results none :exports none
+  (setq org-confirm-babel-evaluate nil)
+  (org-latex-export-to-pdf)
+  (org-pandoc-export-to-plain) ;; alternative??
+#+end_src
 
 Anfangsdatum für Auswertung:
 
 #+name: start_datum
 #+begin_src sh :exports results
-echo 2021-10-19
+echo 2022-01-06
 #+end_src
 
 #+RESULTS: start_datum
-: 2021-10-19
+: 2022-01-06
 
 #+begin_src sh :results none :exports none
   echo > kmstand.ledger
@@ -105,7 +114,7 @@ Fahrtenbuch aus der organice App:
   hledger -f kmstand.ledger register -b <<start_datum()>> expenses:km -H
 #+end_src
 
-** Plausibilätscheck                                             :noexport:
+* Plausibilätscheck                                             :noexport:
 
 Negative Kilometerdifferenzen:
 
@@ -134,7 +143,7 @@ Verdächtig viele Beteiligte:
 
 #+RESULTS:
 
-** COMMENT Using Radio Checkboxes to select the file
+* COMMENT Using Radio Checkboxes to select the file
 
 #+NAME: kmfile
 #+ATTR_ORG: :radio t

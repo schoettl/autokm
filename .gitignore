@@ -2,5 +2,4 @@ sample.org
 kmstand.ledger
 *.pdf
 *.tex
-*.log
-*.aux
+*.txt
