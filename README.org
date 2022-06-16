@@ -1,0 +1,76 @@
+
+* Fahrtenbuch für gemeinsam genutzte Autos
+
+Wir haben mehrere Autos, die mehrere Personen abwechselnd nutzen.
+Alle Kosten (Reperaturen, Versicherung, Sprit usw.) werden vom
+Fahrzeughalter bezahlt.
+Damit es gerecht ist, zahlen alle Nutzer eine Kilometerpauschale an
+den Fahrzeughalter.
+
+Die Abrechnung der gefahrenen Kilometer aller Nutzer realisieren wir
+folgendermaßen:
+
+- [[https://organice.200ok.ch/][organice]] als digitales Fahrtenbuch (quasi als App für's Smartphone).
+- Die Fahrtenbuch-Datei hat ein spezielles [[https://orgmode.org/][Org Mode]] Datenformat.
+- Mithilfe von Emacs, Org Mode, Hledger und weiteren Scripts wird die
+  Abrechnung erstellt.
+
+* Beispiel- und Vorlagedatei für das Fahrtenbuch
+
+Wichtig in diesem Beispiel ist eigentlich nur:
+
+- Kilometerstände müssen mindestens zwei Sterne davor stehen haben (=**=)
+- Nach dem ganzzahligen Kilometerstand muss "km" stehen
+- Nach "km" können die Anfangsbuchstaben der Namen der Fahrer stehen,
+  danach kann ein beliebiger Text stehen
+
+Formal:
+
+: *** KILOMETERSTAND "km" [FAHRER [BESCHREIBUNG] [ORG_TAGS]]
+
+#+begin_src org :tangle sample.org
+  * Fahrtenbuch
+  ** Aktuelle Fahrten
+  *** 1200 km J ausflug in die berge
+  [2022-06-16 Thu]
+  *** 1100 km H
+  [2022-06-15 Thu]
+  *** 1000 km
+  [2022-06-15 Thu]
+  ** Archiv (2021)
+  *** 1000 km J urlaub
+  *** 700 km
+  *** 600 km H
+  *** 500 km
+#+end_src
+
+* Beispiel Capture templates für organice
+
+Damit man schnell Einträge ins Fahrtenbuch hinzufügen kann, kann man
+in organice
+[[https://organice.200ok.ch/documentation.html#capture_templates][Capture templates]]
+definieren, also Vorlagen, die man über den "+" Button öffnen,
+ausfüllen und dem Fahrtenbuch hinzufügen kann.
+
+# TODO: placeholder for cursor und inactive timestamp with time?
+# einen für Anfang, einen für Ende
+#+begin_example
+  ** 20%? km J
+  %U
+#+end_example
+
+* Ein Hledger Journal für alle Autos erzeugen
+
+#+begin_src sh
+  echo > kmstand.ledger
+  echo 'commodity 9.999,99 €' >> kmstand.ledger
+  echo 'commodity 9.999,99 km' >> kmstand.ledger
+  echo 'P 2020-01-01 km 0,25 €' >> kmstand.ledger
+  echo 'P 2022-03-10 km 0,30 €' >> kmstand.ledger
+  awk -f org2hledger.awk -vextratag=auto:vw < ~/Dropbox/org/gschwisterl/auto.org >> kmstand.ledger
+  awk -f org2hledger.awk -vextratag=auto:benz < ~/Dropbox/org/gschwisterl/auto_opa.org >> kmstand.ledger
+#+end_src
+
+#+begin_src sh :results verbatim
+  hledger -f kmstand.ledger balance expenses:km: --pivot auto -Y
+#+end_src

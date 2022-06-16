@@ -1,0 +1,147 @@
+
+* Abrechnung
+
+Anfangsdatum für Auswertung:
+
+#+name: start_datum
+#+begin_src sh :exports results
+echo 2021-10-19
+#+end_src
+
+#+RESULTS: start_datum
+: 2021-10-19
+
+#+begin_src sh :results none :exports none
+  echo > kmstand.ledger
+  echo 'commodity 9.999,99 €' >> kmstand.ledger
+  echo 'commodity 9.999,99 km' >> kmstand.ledger
+  echo 'P 2020-01-01 km 0,25 €' >> kmstand.ledger
+  echo 'P 2022-03-10 km 0,30 €' >> kmstand.ledger
+  # Hier das richtige Auto auswählen!
+  awk -f org2hledger.awk -vextratag=auto:vw < ~/Dropbox/org/gschwisterl/auto.org >> kmstand.ledger
+  #awk -f org2hledger.awk -vextratag=auto:benz < ~/Dropbox/org/gschwisterl/auto_opa.org >> kmstand.ledger
+#+end_src
+
+Kilometeraufstellung von … bis einschließlich …
+
+#+begin_src sh :noweb yes :exports results
+  echo <<start_datum()>>
+  date -I
+#+end_src
+
+#+RESULTS:
+| 2021-10-19 |
+| 2022-01-05 |
+
+Kilometer-Anteile in Euro:
+
+#+begin_src sh :noweb yes :results verbatim :exports results
+  hledger -f kmstand.ledger balance -b <<start_datum()>> -V expenses:km
+#+end_src
+
+#+RESULTS:
+:              52,50 €  expenses:km:J
+:               7,50 €  expenses:km:K
+:             134,25 €  expenses:km:L
+:               7,00 €  expenses:km:V
+:             500,75 €  expenses:km:X
+: --------------------
+:             702,00 €  
+
+Kilometer-Anteile in Kilometer:
+
+#+begin_src sh :noweb yes :results verbatim :exports results
+  hledger -f kmstand.ledger balance -b <<start_datum()>> expenses:km
+#+end_src
+
+#+RESULTS:
+:            210,00 km  expenses:km:J
+:             30,00 km  expenses:km:K
+:            537,00 km  expenses:km:L
+:             28,00 km  expenses:km:V
+:          2.003,00 km  expenses:km:X
+: --------------------
+:          2.808,00 km  
+
+Kilometer-Anteile in Prozent:
+
+#+begin_src sh :noweb yes :results verbatim :exports results
+  hledger -f kmstand.ledger balance -b <<start_datum()>> -% expenses:km
+#+end_src
+
+#+RESULTS:
+:                7.5 %  expenses:km:J
+:                1.1 %  expenses:km:K
+:               19.1 %  expenses:km:L
+:                1.0 %  expenses:km:V
+:               71.3 %  expenses:km:X
+: --------------------
+:              100.0 %  
+
+Kilometer-Anteile über die Jahre:
+
+#+begin_src sh :results verbatim :exports results
+  hledger -f kmstand.ledger balance -YTA% expenses:km
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Balance changes in 2020-01-01..2022-12-31:
+
+               ||    2020     2021     2022    Total  Average 
+===============++=============================================
+ expenses:km:J ||  33.1 %    6.0 %    2.6 %   32.6 %   32.6 % 
+ expenses:km:K ||       0   19.8 %        0    0.4 %    0.4 % 
+ expenses:km:L ||  33.1 %   33.9 %        0   33.1 %   33.1 % 
+ expenses:km:V ||  33.0 %    8.9 %        0   32.6 %   32.6 % 
+ expenses:km:X ||   0.8 %   31.4 %   97.4 %    1.4 %    1.4 % 
+---------------++---------------------------------------------
+               || 100.0 %  100.0 %  100.0 %  100.0 %  100.0 % 
+#+end_example
+
+Fahrtenbuch aus der organice App:
+
+#+begin_src sh :noweb yes :results verbatim :exports results
+  hledger -f kmstand.ledger register -b <<start_datum()>> expenses:km -H
+#+end_src
+
+** Plausibilätscheck                                             :noexport:
+
+Negative Kilometerdifferenzen:
+
+#+begin_src bash :noweb yes :results verbatim :exports both
+  hledger -f kmstand.ledger register -b <<start_datum()>> expenses:km 'amt:<0'
+#+end_src
+
+#+RESULTS:
+
+Verdächtig weite Fahrten:
+
+#+begin_src bash :noweb yes :results verbatim :exports both
+  hledger -f kmstand.ledger print -b <<start_datum()>> 'amt:>100' not:km:X
+#+end_src
+
+#+RESULTS:
+
+#+end_example
+
+Verdächtig viele Beteiligte:
+
+#+begin_src sh :noweb yes :results verbatim :exports both
+  hledger -f kmstand.ledger print -b <<start_datum()>> \
+   | awk 'BEGIN{FS="\n"; RS=""; ORS="\n\n"}; NF>4'
+#+end_src
+
+#+RESULTS:
+
+** COMMENT Using Radio Checkboxes to select the file
+
+#+NAME: kmfile
+#+ATTR_ORG: :radio t
+- [ ] ~/Dropbox/org/gschwisterl/auto.org
+- [X] ~/Dropbox/org/gschwisterl/auto_opa.org
+
+Aber ohne weiteres kann ich anscheinend =<<kmfile()>>= nicht
+in noweb src Blöcken verwenden.
+
+https://kitchingroup.cheme.cmu.edu/blog/2015/10/05/A-checkbox-list-in-org-mode-with-one-value/
