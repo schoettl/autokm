@@ -17,6 +17,7 @@ function printTransaction() {
 	print "  assets:km"
 	n = length(wer)
 	anteil = kmdiff / n
+	anteil = gensub(/\./, ",", 1, sprintf("%.2f", anteil))
 	for (i = 1; i <= n; i++) {
 		person = substr(wer, i, 1)
 		printf "  expenses:km:%s     %s km\n", person, anteil
