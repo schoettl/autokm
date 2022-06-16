@@ -21,12 +21,16 @@ Wichtig in diesem Beispiel ist eigentlich nur:
 
 - Kilometerstände müssen mindestens zwei Sterne davor stehen haben (=**=)
 - Nach dem ganzzahligen Kilometerstand muss "km" stehen
-- Nach "km" können die Anfangsbuchstaben der Namen der Fahrer stehen,
-  danach kann ein beliebiger Text stehen
+- Nach "km" kann der Anfangsbuchstabe des Namen des Fahrers stehen (oder bei mehreren
+  Personen mehrere Anfangsbuchstaben ohne Leerzeichen dazwischen)
+- Wenn Fahrer angegeben sind kann danach ein beliebiger Text stehen
 
 Formal:
 
-: *** KILOMETERSTAND "km" [FAHRER [BESCHREIBUNG] [ORG_TAGS]]
+: ** KILOMETERSTAND km [FAHRER [BESCHREIBUNG] [ORG_TAGS]]
+
+TODO: Muss noch genauer beschrieben werden. Es funktioniert das, was
+das Skript =org2hledger.awk= akzeptiert.
 
 #+begin_src org :tangle sample.org
   * Fahrtenbuch
@@ -44,11 +48,11 @@ Formal:
   *** 500 km
 #+end_src
 
-* Beispiel Capture templates für organice
+* Beispiel Capture Templates für organice
 
 Damit man schnell Einträge ins Fahrtenbuch hinzufügen kann, kann man
 in organice
-[[https://organice.200ok.ch/documentation.html#capture_templates][Capture templates]]
+[[https://organice.200ok.ch/documentation.html#capture_templates][Capture Templates]]
 definieren, also Vorlagen, die man über den "+" Button öffnen,
 ausfüllen und dem Fahrtenbuch hinzufügen kann.
 
@@ -70,6 +74,8 @@ ausfüllen und dem Fahrtenbuch hinzufügen kann.
   awk -f org2hledger.awk -vextratag=auto:vw < ~/Dropbox/org/gschwisterl/auto.org >> kmstand.ledger
   awk -f org2hledger.awk -vextratag=auto:benz < ~/Dropbox/org/gschwisterl/auto_opa.org >> kmstand.ledger
 #+end_src
+
+Beispiel Hledger Abfrage: Kilometer pro Jahr, getrennt nach Auto:
 
 #+begin_src sh :results verbatim
   hledger -f kmstand.ledger balance expenses:km: --pivot auto -Y
