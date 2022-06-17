@@ -13,6 +13,9 @@ BEGIN{
 }
 function printTransaction() {
 	kmdiff = km - prevkm
+	if (kmdiff < 0) {
+		printf "warning: negative km difference between %d km and %d km.\n", km, prevkm > "/dev/stderr"
+	}
 	printf "%s  %s km %s | %s  ; tags:%s, time:%s%s\n", date, km, wer, description, tags, time, extratag
 	print "  assets:km"
 	n = length(wer)

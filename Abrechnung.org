@@ -1,5 +1,5 @@
 #+TITLE:    Abrechnung
-#+SUBTITLE: Kilometerabrechnung von gemeinsam genutztem Auto
+#+SUBTITLE: Kilometerabrechnung von gemeinsam genutzten Autos
 #+OPTIONS:  toc:nil num:nil timestamp:nil prop:t
 #+AUTHOR:   Jakob Schöttl
 #+EMAIL:    jakob.schoettl@yahoo.de
@@ -28,16 +28,17 @@ echo 2022-01-06
 # (It is not executed on export!)
 
 #+name: prepare_ledger
-#+begin_src sh :results none :exports none
+#+begin_src sh :exports none
   echo > kmstand.ledger
   echo 'commodity 9.999,99 €' >> kmstand.ledger
   echo 'commodity 9.999,99 km' >> kmstand.ledger
   echo 'P 2020-01-01 km 0,25 €' >> kmstand.ledger
   echo 'P 2022-03-10 km 0,30 €' >> kmstand.ledger
-  # Hier das richtige Auto auswählen!
   awk -f org2hledger.awk -vextratag=auto:vw < ~/Dropbox/org/gschwisterl/auto.org >> kmstand.ledger
-  #awk -f org2hledger.awk -vextratag=auto:benz < ~/Dropbox/org/gschwisterl/auto_opa.org >> kmstand.ledger
+  awk -f org2hledger.awk -vextratag=auto:benz < ~/Dropbox/org/gschwisterl/auto_opa.org >> kmstand.ledger
 #+end_src
+
+#+RESULTS: prepare_ledger
 
 Kilometeraufstellung von … bis einschließlich …
 
