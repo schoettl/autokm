@@ -6,13 +6,8 @@
 
 # 1. Check and correct start_datum
 # 2. Execute code block prepare_ledger
-# 3. Execute this code block to generate exports:
-
-#+begin_src elisp :results none :exports none
-  (setq org-confirm-babel-evaluate nil)
-  (org-latex-export-to-pdf)
-  (org-pandoc-export-to-plain) ;; non-pandoc alternative?
-#+end_src
+# 3. Execute code block run_babel to generate exports
+# 4. See Plausibilätscheck
 
 Anfangsdatum für Auswertung:
 
@@ -34,11 +29,18 @@ echo 2022-06-18
   echo 'commodity 9.999,99 km' >> kmstand.ledger
   echo 'P 2020-01-01 km 0,25 €' >> kmstand.ledger
   echo 'P 2022-03-10 km 0,30 €' >> kmstand.ledger
-  awk -f org2hledger.awk -vextratag=auto:vw < ~/Dropbox/org/gschwisterl/auto.org >> kmstand.ledger
-  awk -f org2hledger.awk -vextratag=auto:benz < ~/Dropbox/org/gschwisterl/auto_opa.org >> kmstand.ledger
+  awk -f org2hledger.awk -vextratag=auto:vw < ~/Dropbox/org/gschwisterl/auto.org 2>&1 >> kmstand.ledger
+  awk -f org2hledger.awk -vextratag=auto:benz < ~/Dropbox/org/gschwisterl/auto_opa.org 2>&1 >> kmstand.ledger
 #+end_src
 
 #+RESULTS: prepare_ledger
+
+#+name: run_babel
+#+begin_src elisp :results none :exports none
+  (setq org-confirm-babel-evaluate nil)
+  (org-latex-export-to-pdf)
+  (org-pandoc-export-to-plain) ;; non-pandoc alternative?
+#+end_src
 
 Kilometeraufstellung von … bis einschließlich …
 
