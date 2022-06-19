@@ -1,15 +1,17 @@
 # Usage: awk -f org2hledger.awk < auto-km-descending.org
+# Pass -vextratag=auto:vw to add an extra tag "auto:vw" to
+# all transactions.
 # Input must be in this format:
 # ** <km> km <wer> [<desc>] [:tags:]
 # [2020-06-21 Sun 21:18]
 # ** ...
 # in DESCENDING order.
-# Pass -vextratag=auto:vw to add an extra tag "auto:vw" to
-# all transactions.
 BEGIN{
 	OFS="\t"
 	print ""
-	if (extratag) extratag = ", " extratag
+	if (extratag) {
+		extratag = ", " extratag
+	}
 }
 function printTransaction() {
 	kmdiff = km - prevkm

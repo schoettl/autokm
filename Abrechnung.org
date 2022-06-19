@@ -17,7 +17,6 @@ echo 2022-06-18
 #+end_src
 
 #+RESULTS: start_datum
-: 2022-01-06
 
 # THIS CODE BLOCK MUST BE EXECUTED EXPLICITLY:
 # (It is not executed on export!)
@@ -60,13 +59,6 @@ Kilometer-Anteile in Euro:
 #+end_src
 
 #+RESULTS:
-:              52,50 €  expenses:km:J
-:               7,50 €  expenses:km:K
-:             134,25 €  expenses:km:L
-:               7,00 €  expenses:km:V
-:             500,75 €  expenses:km:X
-: --------------------
-:             702,00 €  
 
 Kilometer-Anteile in Kilometer:
 
@@ -75,13 +67,6 @@ Kilometer-Anteile in Kilometer:
 #+end_src
 
 #+RESULTS:
-:            210,00 km  expenses:km:J
-:             30,00 km  expenses:km:K
-:            537,00 km  expenses:km:L
-:             28,00 km  expenses:km:V
-:          2.003,00 km  expenses:km:X
-: --------------------
-:          2.808,00 km  
 
 Kilometer-Anteile in Prozent:
 
@@ -90,13 +75,6 @@ Kilometer-Anteile in Prozent:
 #+end_src
 
 #+RESULTS:
-:                7.5 %  expenses:km:J
-:                1.1 %  expenses:km:K
-:               19.1 %  expenses:km:L
-:                1.0 %  expenses:km:V
-:               71.3 %  expenses:km:X
-: --------------------
-:              100.0 %  
 
 Kilometer-Anteile über die Jahre:
 
@@ -105,19 +83,6 @@ Kilometer-Anteile über die Jahre:
 #+end_src
 
 #+RESULTS:
-#+begin_example
-Balance changes in 2020-01-01..2022-12-31:
-
-               ||    2020     2021     2022    Total  Average 
-===============++=============================================
- expenses:km:J ||  33.1 %    6.0 %    2.6 %   32.6 %   32.6 % 
- expenses:km:K ||       0   19.8 %        0    0.4 %    0.4 % 
- expenses:km:L ||  33.1 %   33.9 %        0   33.1 %   33.1 % 
- expenses:km:V ||  33.0 %    8.9 %        0   32.6 %   32.6 % 
- expenses:km:X ||   0.8 %   31.4 %   97.4 %    1.4 %    1.4 % 
----------------++---------------------------------------------
-               || 100.0 %  100.0 %  100.0 %  100.0 %  100.0 % 
-#+end_example
 
 Fahrtenbuch aus der organice App:
 

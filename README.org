@@ -26,10 +26,15 @@ Wichtig in diesem Beispiel ist eigentlich nur:
 - Nach "km" kann ein Buchstabe als Fahrerkürzel stehen (oder bei mehreren
   Personen mehrere eindeutige Buchstaben ohne Leerzeichen dazwischen)
 - Wenn Fahrer angegeben sind kann danach ein beliebiger Text stehen
+- In der nachfolgenden Zeile muss ein Orgmode Zeitstempel stehen,
+  optional mit Zeit, z.B. [2022-06-19 Sun 12:10]
 
 Formal definiert:
 
 : ** KILOMETERSTAND km [FAHRER [BESCHREIBUNG]] [ORG_TAGS]
+: ORG_TIMESTAMP_OPTIONAL_WITH_TIME
+
+Die Groß-/Kleinschreibung der Fahrerbuchstaben ist unerheblich.
 
 TODO: Muss noch genauer beschrieben werden. Es funktioniert das, was
 das Skript =org2hledger.awk= richtig verarbeitet.
@@ -37,7 +42,7 @@ das Skript =org2hledger.awk= richtig verarbeitet.
 #+begin_src org :tangle sample.org
   * Fahrtenbuch
   ** 1200 km J ausflug in die berge
-  [2022-06-16 Thu]
+  [2022-06-16 Thu 20:00]
   ** 1100 km H
   [2022-06-15 Thu]
   ** 1000 km
@@ -49,6 +54,15 @@ das Skript =org2hledger.awk= richtig verarbeitet.
   ** 500 km
 #+end_src
 
+Hier ist ein Beispielaufruf von =org2hledger.awk=. Vorher muss
+=sample.org= erstell werden (Emacs =M-x org-babel-tangle=).
+
+#+begin_src sh :results verbatim
+  awk -f org2hledger.awk sample.org
+#+end_src
+
+#+RESULTS:
+
 * Beispiel Capture Templates für organice
 
 Damit man schnell Einträge ins Fahrtenbuch hinzufügen kann, kann man
@@ -57,19 +71,21 @@ in organice
 definieren, also Vorlagen, die man über den "+" Button öffnen,
 ausfüllen und dem Fahrtenbuch hinzufügen kann.
 
-*Anfangsstand* (A) – nicht notwendig, wenn der Anfangsstand gleich dem
-letzten Endstand ist
+Die Capture Templates müssen folgende Einstellungen haben:
 
-*Prepend: yes*
+- Prepend: yes
+- Header path: Fahrtenbuch (oder wie die top-level Überschrift eben heißt)
+- Optional: Available in org files: (hier die Fahrtenbuch-Dateien wählen)
+
+*Anfangsstand* (A) – nicht notwendig, wenn der Anfangsstand gleich dem
+letzten Endstand ist:
 
 #+begin_example
   * 25%? km
   %U
 #+end_example
 
-*Endstand* (E)
-
-*Prepend: yes*
+*Endstand* (E):
 
 #+begin_example
   * 25%? km J
