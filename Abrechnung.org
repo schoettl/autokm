@@ -13,16 +13,17 @@ Anfangsdatum für Auswertung:
 
 #+name: start_datum
 #+begin_src sh :exports results
-echo 2022-06-18
+echo 2022-12-31
 #+end_src
 
 #+RESULTS: start_datum
+: 2022-06-18
 
 # THIS CODE BLOCK MUST BE EXECUTED EXPLICITLY:
 # (It is not executed on export!)
 
 #+name: prepare_ledger
-#+begin_src sh :exports none
+#+begin_src sh :exports none :results verbatim
   echo > kmstand.ledger
   echo 'commodity 9.999,99 €' >> kmstand.ledger
   echo 'commodity 9.999,99 km' >> kmstand.ledger
@@ -106,7 +107,6 @@ Verdächtig weite Fahrten:
   hledger -f kmstand.ledger print -b <<start_datum()>> 'amt:>100' not:km:X
 #+end_src
 
-#+RESULTS:
 
 #+end_example
 
@@ -117,7 +117,6 @@ Verdächtig viele Beteiligte:
    | awk 'BEGIN{FS="\n"; RS=""; ORS="\n\n"}; NF>4'
 #+end_src
 
-#+RESULTS:
 
 # TODO ein fahrer mehrmals angegeben?
 # das macht alles das alte plausibel.sh script...
