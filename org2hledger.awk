@@ -18,6 +18,10 @@ function printTransaction() {
 	if (kmdiff < 0) {
 		printf "warning: negative km difference between %d km and %d km.\n", km, prevkm > "/dev/stderr"
 	}
+	if (!date) {
+		printf "error: no date given at %d km.\n", km > "/dev/stderr"
+		next
+	}
 	printf "%s  %s km %s | %s  ; tags:%s, time:%s%s\n", date, km, wer, description, tags, time, extratag
 	print "  assets:km"
 	n = length(wer)
@@ -45,7 +49,7 @@ function printTransaction() {
 				   gensub(/  +/, " ", "g",
 				    gensub(/\t/, " ", "g", description)))
 }
-!/^\*/{
+/^\[[-0-9a-zA-Z: ]*\]/{
 	date = substr($1, 2)
 	time = substr($3, 1, 5)
 }
