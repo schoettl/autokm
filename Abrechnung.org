@@ -17,7 +17,7 @@ echo 2022-12-31
 #+end_src
 
 #+RESULTS: start_datum
-: 2022-06-18
+: 2022-12-31
 
 # THIS CODE BLOCK MUST BE EXECUTED EXPLICITLY:
 # (It is not executed on export!)
@@ -30,7 +30,7 @@ echo 2022-12-31
   echo 'P 2020-01-01 km 0,25 €' >> kmstand.ledger
   echo 'P 2022-03-10 km 0,30 €' >> kmstand.ledger
   awk -f org2hledger.awk -vextratag=auto:vw < ~/Dropbox/org/gschwisterl/auto.org 2>&1 >> kmstand.ledger
-  awk -f org2hledger.awk -vextratag=auto:benz < ~/Dropbox/org/gschwisterl/auto_opa.org 2>&1 >> kmstand.ledger
+  awk -f org2hledger.awk -vextratag=auto:mercedes < ~/Dropbox/org/gschwisterl/auto_opa.org 2>&1 >> kmstand.ledger
 #+end_src
 
 #+RESULTS: prepare_ledger
@@ -50,8 +50,8 @@ Kilometeraufstellung von … bis einschließlich …
 #+end_src
 
 #+RESULTS:
-| 2021-10-19 |
-| 2022-01-05 |
+| 2022-12-31 |
+| 2023-10-28 |
 
 Kilometer-Anteile in Euro:
 
@@ -88,7 +88,14 @@ Kilometer-Anteile über die Jahre:
 Fahrtenbuch aus der organice App:
 
 #+begin_src sh :noweb yes :results verbatim :exports results
-  hledger -f kmstand.ledger register -b <<start_datum()>> expenses:km -H
+  for i in vw mercedes; do
+    echo
+    echo "---------------------------"
+    echo "Auto: ${i^^}"
+    echo "---------------------------"
+    echo
+    hledger -f kmstand.ledger register -b <<start_datum()>> expenses:km -H tag:auto="$i"
+  done
 #+end_src
 
 * Plausibilätscheck                                             :noexport:
