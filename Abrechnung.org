@@ -53,6 +53,14 @@ Kilometeraufstellung von … bis einschließlich …
 | 2022-12-31 |
 | 2023-10-28 |
 
+Kilometergeld:
+
+#+begin_src sh :noweb yes :results verbatim :exports results
+  awk '/^P / { printf "seit %s: %s €/km\n", $2, $4 }' kmstand.ledger
+#+end_src
+
+#+RESULTS:
+
 Kilometer-Anteile in Euro:
 
 #+begin_src sh :noweb yes :results verbatim :exports results
