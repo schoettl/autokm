@@ -13,11 +13,11 @@ Anfangsdatum für Auswertung:
 
 #+name: start_datum
 #+begin_src sh :exports results
-echo 2023-10-30
+echo 2024-07-06
 #+end_src
 
 #+RESULTS: start_datum
-: 2023-10-30
+: 2024-07-06
 
 # THIS CODE BLOCK MUST BE EXECUTED EXPLICITLY:
 # (It is not executed on export!)
@@ -85,7 +85,19 @@ Kilometer-Anteile in Prozent:
 
 #+RESULTS:
 
+Kilometer-Anteile über die letzten Monate:
+
+#+begin_src sh :noweb yes :results verbatim :exports results
+  hledger -f kmstand.ledger balance -MT -b "$(echo <<start_datum()>> | head -c 7)" expenses:km
+#+end_src
+
 Kilometer-Anteile über die Jahre:
+
+#+begin_src sh :results verbatim :exports results
+  hledger -f kmstand.ledger balance -YTA expenses:km
+#+end_src
+
+Kilometer-Anteile über die Jahre in Prozent:
 
 #+begin_src sh :results verbatim :exports results
   hledger -f kmstand.ledger balance -YTA% expenses:km
@@ -113,8 +125,6 @@ Negative Kilometerdifferenzen:
 #+begin_src bash :noweb yes :results verbatim :exports both
   hledger -f kmstand.ledger register -b <<start_datum()>> expenses:km 'amt:<0'
 #+end_src
-
-#+RESULTS:
 
 Verdächtig weite Fahrten:
 
